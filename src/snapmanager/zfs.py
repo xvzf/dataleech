@@ -1,6 +1,6 @@
 #!/bin/python3
 """
-zbackup - a backup plan using zfs... 
+dataleech - a backup plan using zfs... 
 Copyright (C) 2017 Matthias Riegler <matthias@xvzf.tech>
 
 This program is distributed in the hope that it will be useful,
@@ -84,7 +84,7 @@ class ZFS(object):
         snaplist = []
 
         for i in dirtysnaplist:
-            snaplist.append(i.split(" ")[0])
+            snaplist.append(i.split(" ")[0].split("@")[1])
 
         return snaplist
 
@@ -111,16 +111,16 @@ class ZFS(object):
 
 
     def deletesnapshot(self, name):
+
+        print (name)
         
         if not self.checkrequirements:
             return False
-
-        if name in self.getsnaplist(name.split("/")[0]):
             
-            out, ecode = self._exec("zfs", "destroy " + name)
+        out, ecode = self._exec("zfs", "destroy " + name)
 
-            if ecode == 0:
-                return True
+        if ecode == 0:
+            return True
 
         return False
 
