@@ -36,6 +36,6 @@ package() {
   install -Dm644 "${srcdir}/bazel-genfiles/cronfiles/dataleech" "${pkgdir}/etc/cron.d/dataleech" 
   install -Dm755 "${srcdir}/bazel-genfiles/cronfiles/dataleech_daily" "${pkgdir}/etc/cron.daily/dataleech"
 
-  install -Dm755 "${srcdir/bazel-genfiles/archscripts/superman}" "${pkgdir}/usr/bin/superman"
+  install -Dm755 "${srcdir}/bazel-genfiles/archscripts/superman" "${pkgdir}/usr/bin/superman"
 }
 
