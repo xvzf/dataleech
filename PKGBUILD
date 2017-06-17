@@ -1,7 +1,7 @@
 pkgname=dataleech
 pkgdesc=''
 pkgver=0.1
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url='https://github.com/xvzf/dataleech'
 license=('GPL3')

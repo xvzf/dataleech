@@ -69,9 +69,8 @@ class LocalSnapManager(object):
 
             while len(self.shortsnaps) > self.keep:
                 delname = self.shortsnaps.pop(0)
-                print (delname)
                 for i in self.datasets:
-                    self.localzfs.destroysnapshot(i + "@" + delname)
+                    self.localzfs.destroysnapshot(delname, i)
             
         return status 
 
