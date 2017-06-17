@@ -20,3 +20,9 @@ py_binary(
 	srcs = ["newdailysnap.py"],
 	deps = [":snapmanager"]
 )
+
+py_binary(
+	name = "newcustomsnap",
+	srcs = ["newcustomsnap.py"],
+	deps = [":snapmanager"]
+)

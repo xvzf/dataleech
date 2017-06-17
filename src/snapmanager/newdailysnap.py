@@ -23,7 +23,8 @@ def main():
     if not args.datasets:
         sys.exit(-1) 
     
-    LocalSnapManager(datasets=args.datasets).newdailysnap()
+    if not LocalSnapManager(datasets=args.datasets).newdailysnap():
+        sys.exit(-1)
 
 if __name__ == '__main__':
     main()

@@ -110,14 +110,12 @@ class ZFS(object):
         return False
 
 
-    def deletesnapshot(self, name):
+    def destroysnapshot(self, name, dataset):
 
-        print (name)
-        
         if not self.checkrequirements:
             return False
             
-        out, ecode = self._exec("zfs", "destroy " + name)
+        out, ecode = self._exec("zfs", "destroy " + dataset  + "@" + name)
 
         if ecode == 0:
             return True

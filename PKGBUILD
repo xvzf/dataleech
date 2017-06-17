@@ -1,13 +1,13 @@
 pkgname=dataleech
 pkgdesc=''
 pkgver=0.1
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='https://github.com/xvzf/dataleech'
 license=('GPL3')
 depends=('python')
 makedepends=('bazel')
-provides=('newshortsnap' 'newdailysnap')
+provides=('newshortsnap' 'newdailysnap' 'newcustomsnap' 'superman')
 backup=('etc/dataleech/datasets')
 
 build() {
@@ -17,7 +17,7 @@ build() {
 
 package() {
   mkdir -p "${pkgdir}/usr/libexec/dataleech/"
-  for i in $(echo newdailysnap newshortsnap)
+  for i in $(echo newdailysnap newshortsnap newcustomsnap)
   do
 	chmod 755 "${srcdir}/bazel-bin/snapmanager/${i}"
 	
@@ -35,5 +35,7 @@ package() {
   install -Dm644 "${srcdir}/bazel-genfiles/configfiles/datasets" "${pkgdir}/etc/dataleech/datasets"
   install -Dm644 "${srcdir}/bazel-genfiles/cronfiles/dataleech" "${pkgdir}/etc/cron.d/dataleech" 
   install -Dm755 "${srcdir}/bazel-genfiles/cronfiles/dataleech_daily" "${pkgdir}/etc/cron.daily/dataleech"
+
+  install -Dm755 "${srcdir/bazel-genfiles/archscripts/superman}" "${pkgdir}/usr/bin/superman"
 }
 

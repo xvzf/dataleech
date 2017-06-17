@@ -44,30 +44,46 @@ class LocalSnapManager(object):
                 if i not in self.shortsnaps:
                     self.shortsnaps.append(i)
        
+    
+    def snapshot(self, name):
+        status = True
+
+        for i in self.datasets:
+            if not self.localzfs.snapshot(name, i):
+                status = False
+
+        if not status:
+            for i in self.datasets:
+                self.localzfs.destroysnapshot(name, i)
+
+        return status
+
 
     def newshortsnap(self):
         snapname = "dataleech-short-" + self.gentimestamp()
         
-        for i in self.datasets:
-            self.localzfs.snapshot(snapname, i)
+        status = self.snapshot(snapname)
 
-        self.shortsnaps.append(snapname)
+        if status:
+            self.shortsnaps.append(snapname)
 
-        while len(self.shortsnaps) > self.keep:
-            delname = self.shortsnaps.pop(0)
-            print (delname)
-            for i in self.datasets:
-                self.localzfs.deletesnapshot(i + "@" + delname)
+            while len(self.shortsnaps) > self.keep:
+                delname = self.shortsnaps.pop(0)
+                print (delname)
+                for i in self.datasets:
+                    self.localzfs.deletesnapshot(i + "@" + delname)
+            
+        return status 
 
 
     def newdailysnap(self):
         snapname = "dataleech-daily-" + self.gentimestamp()
 
-        for i in self.datasets:
-            self.localzfs.snapshot(snapname, i)
+        return self.snapshot(snapname)
 
 
-    def localmain(self):
-        # Setup sheduler for shorttime snapshots
-        schedule.every(5).minutes.do(LocalSnapManager.newshortsnap, (self,))
+    def newcustomsnap(self, name):
+        snapname = "dataleech-custom-" + name + "-" +  self.gentimestamp()
+
+        return self.snapshot(snapname)
 

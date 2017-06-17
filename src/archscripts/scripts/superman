@@ -1,0 +1,26 @@
+#!/bin/bash
+
+privilegedcmds="-S -Sw -U -Su -Syu -R -Rs -Rd -Rsc -Rdd -Rn"
+
+function getrootdataset {
+	echo $(zfs list -o name,mountpoint | grep "/$" | awk '{print $1;}')
+	return 0
+}
+
+for i in $privilegedcmds; do
+	if [[ $1 == $i ]]; then
+		if [[ $(id -u) == "0" ]]; then
+			echo "[!] command might modify system, snapshoting..."
+			newcustomsnap --name "pacman" \
+				--dataset $(getrootdataset)
+			if [ $? -eq 0 ]; then
+				echo "[+] Snapshot created"
+				break
+			fi
+			echo "[-] Snapshot failed, aborting"
+			exit 1
+		fi
+	fi
+done
+
+pacman "$@"
