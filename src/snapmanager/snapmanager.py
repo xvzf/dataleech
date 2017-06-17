@@ -9,9 +9,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 
-from .zfs import ZFS
+from zfs import ZFS
 from datetime import datetime
-import json
 
 # Manages snapshots created by dataleech
 class LocalSnapManager(object):
@@ -21,17 +20,18 @@ class LocalSnapManager(object):
     dailysnaps = []
     shortsnaps = []
 
-    def __init__(self, datasets):
+    def __init__(self, datasets, keep=5):
         super(LocalSnapManager, self).__init__()
         self.localzfs = ZFS()
         self.datasets = datasets
+        self.keep = keep
 
         for i in self.datasets:
             self._importsnaps_dataset(i)
     
     
     def gentimestamp(self):
-        return datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        return datetime.now().strftime('%Y-%m-%d_%H-%M')
 
 
     def _importsnaps_dataset(self, dataset):
@@ -53,14 +53,21 @@ class LocalSnapManager(object):
 
         self.shortsnaps.append(snapname)
 
-        while len(self.shortsnaps) > 5:
+        while len(self.shortsnaps) > self.keep:
             delname = self.shortsnaps.pop(0)
             print (delname)
             for i in self.datasets:
                 self.localzfs.deletesnapshot(i + "@" + delname)
+
 
     def newdailysnap(self):
         snapname = "dataleech-daily-" + self.gentimestamp()
 
         for i in self.datasets:
             self.localzfs.snapshot(snapname, i)
+
+
+    def localmain(self):
+        # Setup sheduler for shorttime snapshots
+        schedule.every(5).minutes.do(LocalSnapManager.newshortsnap, (self,))
+
