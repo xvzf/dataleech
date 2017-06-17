@@ -1,11 +1,11 @@
 pkgname=dataleech
-pkgdesc=''
+pkgdesc='Dataleech - a backup plan using ZFS'
 pkgver=0.1
-pkgrel=3
+pkgrel=4
 arch=('x86_64')
 url='https://github.com/xvzf/dataleech'
 license=('GPL3')
-depends=('python')
+depends=('python' 'mbuffer')
 makedepends=('bazel')
 provides=('newshortsnap' 'newdailysnap' 'newcustomsnap' 'superman')
 backup=('etc/dataleech/datasets')
@@ -20,7 +20,6 @@ package() {
   for i in $(echo newdailysnap newshortsnap newcustomsnap)
   do
 	chmod 755 "${srcdir}/bazel-bin/snapmanager/${i}"
-	
 	sed "s#os.path.abspath(sys.argv\[0\])#'/usr/libexec/dataleech/${i}'#g" -i "${srcdir}/bazel-bin/snapmanager/${i}"
 
 	install -Dm755 "${srcdir}/bazel-bin/snapmanager/${i}" "${pkgdir}/usr/bin/${i}"
@@ -35,7 +34,8 @@ package() {
   install -Dm644 "${srcdir}/bazel-genfiles/configfiles/datasets" "${pkgdir}/etc/dataleech/datasets"
   install -Dm644 "${srcdir}/bazel-genfiles/cronfiles/dataleech" "${pkgdir}/etc/cron.d/dataleech" 
   install -Dm755 "${srcdir}/bazel-genfiles/cronfiles/dataleech_daily" "${pkgdir}/etc/cron.daily/dataleech"
-
+  install -Dm755 "${srcdir}/bazel-genfiles/archscripts/snapsend" "${pkgdir}/usr/libexec/dataleech/snapsend"
+  install -Dm755 "${srcdir}/bazel-genfiles/archscripts/snapreceive" "${pkgdir}/usr/libexec/dataleech/snapreceive"
   install -Dm755 "${srcdir}/bazel-genfiles/archscripts/superman" "${pkgdir}/usr/bin/superman"
 }
 

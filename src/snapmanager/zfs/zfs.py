@@ -123,41 +123,26 @@ class ZFS(object):
         return False
 
 
-    # No native implementation, piping the output to bsd-netcat (need to be installed
-    # so it is checked first). See here for documentation:
-    # https://docs.python.org/3/library/subprocess.html#replacing-shell-pipeline
-    def send(self, name, destination, port, origin=None):
-        
-        # If there is an "origin", we can minimize traffic using incremental transmission
+    def send(self, ip, name, origin=None):
+        sarr = []
+        sarr.append("/usr/libexec/dataleech/snapsend")
+        sarr.append(ip)
         if origin:
+            sarr.append("-i")
+            sarr.append(origin)
+        sarr.append(name)
+        
+        cp_out = subprocess.run(sarr, stdout=subprocess.PIPE)
 
-            # Incremental transmission using zfs send -i origin name
+        return cp_out.returncode
 
-            sendpipe = subprocess.Popen(["zfs", "send", "-i", origin, name], stdout=subprocess.PIPE)
-            nc = subprocess.Popen(["nc", destination, port], stdin=sendpipe.stdout, stdout=subprocess.PIPE)
-            sendpipe.stdout.close()
-            sout, eout = nc.communicate()
+    def receive(self, targetdataset, force=False):
+        sarr = []
+        sarr.append("/usr/libexec/dataleech/snapreceive")
+        if force:
+            sarr.append("-F")
+        sarr.append(targetdataset)
+        
+        cp_out = subprocess.run(sarr, stdout=subprocess.PIPE)
 
-            # No checking here! @TODO
-            return True
-
-        # We can send a snapshot without any incremental steps: 
-
-        sendpipe = subprocess.Popen(["zfs", "send", name], stdout=subprocess.PIPE)
-        nc = subprocess.Popen(["nc", str(destination), str(port)], stdin=sendpipe.stdout, stdout=subprocess.PIPE)
-        sendpipe.stdout.close()
-        sout, eout = p2.communicate()
-
-        # No checking here! @TODO
-        return True
-
-
-    # Sane as above!
-    def receive(self, targetdataset, listenport):
-        recvpipe = subprocess.Popen(["nc", "-l", str(listenport)], stdout=subprocess.PIPE)
-        zfsrecv = subprocess.Popen(["zfs", "receive", targetdataset], stdin=recvpipe.stdout, stdout=subprocess.PIPE)
-        recvpipe.stdout.close()
-        sout, eout = zfsrecv.communicate()
-
-        # Again, no checking involved! @TODO
-        return True
+        return cp_out.returncode
