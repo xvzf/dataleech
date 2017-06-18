@@ -5,7 +5,7 @@ py_library(
 
 py_library(
 	name = "snapmanager",
-	srcs = ["snapmanager.py"],
+	srcs = ["snapmanager.py", "confreader.py"],
 	deps = [":zfs"]
 )
 
@@ -25,4 +25,10 @@ py_binary(
 	name = "newcustomsnap",
 	srcs = ["newcustomsnap.py"],
 	deps = [":snapmanager"]
+
+)
+
+py_binary(
+	name = "confreader",
+	srcs = ["confreader.py"]	
 )

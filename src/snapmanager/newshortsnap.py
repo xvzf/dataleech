@@ -11,19 +11,19 @@ GNU General Public License for more details.
 
 import argparse
 from snapmanager import LocalSnapManager
+from confreader import ConfReader
 import sys
 
 def main():
     parser = argparse.ArgumentParser(description="DATALEECH - A ZFS BACKUP SOLUTION FOR DESKTOP COMPUTERS")
-    parser.add_argument('--datasets', help='specify the datasets', nargs='+')
     parser.add_argument('--keep', help='how many snaps to keep', nargs=1)
 
     args = parser.parse_args()
     
-    if not args.datasets or not args.keep:
+    if not args.keep:
         sys.exit(-1)
 
-    if not LocalSnapManager(datasets=args.datasets).newshortsnap():
+    if not LocalSnapManager(ConfReader().getlocaldatasets()).newshortsnap():
         sys.exit(-1)
 
 if __name__ == '__main__':

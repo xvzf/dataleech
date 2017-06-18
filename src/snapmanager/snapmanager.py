@@ -34,6 +34,10 @@ class LocalSnapManager(object):
         return datetime.now().strftime('%Y-%m-%d_%H-%M')
 
 
+    def gentimestamp_daily(self):
+        return datetime.now().strftime('%Y-%m-%d')
+
+
     def _importsnaps_dataset(self, dataset):
         for i in self.localzfs.getsnaplist(dataset):
             if "dataleech-daily-" in i:
@@ -76,7 +80,7 @@ class LocalSnapManager(object):
 
 
     def newdailysnap(self):
-        snapname = "dataleech-daily-" + self.gentimestamp()
+        snapname = "dataleech-daily-" + self.gentimestamp_daily()
 
         return self.snapshot(snapname)
 
