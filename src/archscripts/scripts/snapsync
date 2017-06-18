@@ -1,0 +1,136 @@
+#!/bin/bash
+
+TYPE="daily"
+
+SSH_CONNOPT=$(cat /etc/dataleech/remoteoptions)
+SSH=$(which ssh)
+SUDO=pkexec
+NOTIFY="notify-send"
+CFG=$(/usr/libexec/dataleech/confreader --open /etc/dataleech/datasets)
+
+function notify {
+	$NOTIFY "DATALEECH" $1
+}
+
+function get_latest_remote {
+	CMD="sudo zfs list -t snapshot -o name -s creation -r $1 | grep $TYPE | tail -n1"
+	REMOTE=$($SSH $SSH_CONNOPT $CMD 2> /dev/null)
+
+	if [ -z "$REMOTE" ]; then
+		echo "NONE"
+		return
+	fi
+
+	echo $REMOTE
+}
+
+
+function get_latest_local {
+	CMD="zfs list -t snapshot -o name -s creation -r $1"
+	LOCAL=$($CMD | grep $TYPE | tail -n1 2> /dev/null)
+
+	if [ -z "$LOCAL" ]; then
+		echo "NONE"
+		return
+	fi
+
+	echo $LOCAL
+}
+
+
+function get_all_local {
+	CMD="zfs list -t snapshot -o name -s creation -r $1"
+	LOCAL=$($CMD | grep $TYPE  2> /dev/null)
+
+	if [ -z "$LOCAL" ]; then
+		echo "NONE"
+		return
+	fi
+
+	echo $LOCAL
+}
+
+
+# check_havetosync localdataset remotedataset
+function check_havetosync {
+	REMOTE=$(get_latest_remote $2)
+	LOCAL=$(get_latest_local $1)
+	
+	if [[ "$REMOTE" == "$LOCAL" ]]; then
+		return 1
+	fi
+
+	return 0
+}
+
+# origin target remote
+function sendsnap {
+	zfs send -i $1 $2 | $SSH $SSH_CONNOPT "sudo zfs receive $3"
+	return $?	
+}
+
+# target remote
+function forcesendsnap {
+	zfs send $1 | $SSH $SSH_CONNOPT "sudo zfs receive -F $2"
+	return $?
+}
+
+# sync localdataset remotedataset
+function dataleech_sync {
+	LATEST_REMOTE_SNAP=$(get_latest_remote $2)
+	
+	if [[ "$LATEST_REMOTE_SNAP" == "NONE" ]]; then
+		forcesendsnap $(get_latest_local $1) $2
+		return $?
+	fi
+	
+	LOCAL_SNAP_LIST=$(get_all_local $1)
+
+	LOCAL_REMOTE_SNAP=$1"@"$(echo $LATEST_REMOTE_SNAP | cut -f2 -d '@')
+
+	SYNC_TARGET=$(echo $LOCAL_SNAP_LIST | tr ' ' '\n' | python -c $'import sys;printi=False\nfor i in sys.stdin.readlines():\n    if printi:\n        sys.stdout.write(i)\n        sys.exit(0)\n    if "'$LOCAL_REMOTE_SNAP$'" in i:\n        printi=True\n' )
+
+	sendsnap $LOCAL_REMOTE_SNAP $SYNC_TARGET $2
+
+}
+
+
+# sync_all_snaps localdataset remotedataset
+function sync_all_snaps {
+	while true; do
+		dataleech_sync $1 $2
+		if [ $? -ne 0 ]; then
+			return 1
+		fi
+			
+		check_havetosync $1 $2
+		if [ $? -eq 0 ]; then
+			return 0
+		fi
+	done
+}
+
+
+function dataleech_main {
+	
+	TOSYNC=""
+
+	for i in $CFG; do
+		REMOTE=$(echo $i | cut -f2 -d':')
+		LOCAL=$(echo $i | cut -f1 -d ':')
+		
+		check_havetosync $LOCAL $REMOTE
+		if [ $? -eq 0 ]; then
+			TOSYNC="$TOSYNC$LOCAL:$REMOTE"$'\n'
+		fi
+	done
+
+	
+	for i in $TOSYNC; do
+		REMOTE=$(echo $i | cut -f2 -d':')
+		LOCAL=$(echo $i | cut -f1 -d ':')
+		sync_all_snaps $LOCAL $REMOTE	
+	done
+}
+
+sync_all_snaps zroot/data/home tank/backup/dataleech/zara/home
