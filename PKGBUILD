@@ -34,7 +34,7 @@ package() {
   mkdir -p ${pkgdir}/etc/{dataleech,cron.d}
 
   install -Dm644 "${srcdir}/bazel-genfiles/configfiles/datasets" "${pkgdir}/etc/dataleech/datasets"
-  install -Dm644 "${srcdir}/bazel-genfiles/configfiles/renoteoptions" "${pkgdir}/etc/dataleech/renoteoptions"
+  install -Dm644 "${srcdir}/bazel-genfiles/configfiles/remoteoptions" "${pkgdir}/etc/dataleech/remoteoptions"
   install -Dm644 "${srcdir}/bazel-genfiles/cronfiles/dataleech" "${pkgdir}/etc/cron.d/dataleech" 
   install -Dm755 "${srcdir}/bazel-genfiles/cronfiles/dataleech_daily" "${pkgdir}/etc/cron.daily/dataleech"
   install -Dm755 "${srcdir}/bazel-genfiles/archscripts/snapsend" "${pkgdir}/usr/libexec/dataleech/snapsend"
