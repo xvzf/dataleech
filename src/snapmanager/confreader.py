@@ -48,9 +48,9 @@ if __name__ == "__main__":
 
     cfgpath = "/etc/dataleech/datasets"
     if args.open:
-        cfgpath = args.open
+        cfgpath = args.open[0]
 
-    c = ConfReader(cfgpath[0])
+    c = ConfReader(cfgpath)
 
     for localdataset, remotedataset in c.getrelatedsets().items():
         print("%s:%s" % (localdataset, remotedataset) )

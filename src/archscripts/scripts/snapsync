@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TYPE="daily"
+TYPE="$1"
 
 SSH_CONNOPT=$(cat /etc/dataleech/remoteoptions)
 SSH=$(which ssh)
@@ -11,6 +11,7 @@ CFG=$(/usr/libexec/dataleech/confreader --open /etc/dataleech/datasets)
 function notify {
 	$NOTIFY "DATALEECH" $1
 }
+
 
 function get_latest_remote {
 	CMD="sudo zfs list -t snapshot -o name -s creation -r $1 | grep $TYPE | tail -n1"
@@ -53,15 +54,19 @@ function get_all_local {
 
 # check_havetosync localdataset remotedataset
 function check_havetosync {
-	REMOTE=$(get_latest_remote $2)
-	LOCAL=$(get_latest_local $1)
+	DREMOTE=$(get_latest_remote $2 | cut -d'@' -f2)
+	DLOCAL=$(get_latest_local $1 | cut -d'@' -f2)
 	
-	if [[ "$REMOTE" == "$LOCAL" ]]; then
+	if [[ "$DREMOTE" == "$DLOCAL" ]]; then
+		echo "Equals"
 		return 1
 	fi
 
+	echo $DREMOTE $DLOCAL
+
 	return 0
 }
+
 
 # origin target remote
 function sendsnap {
@@ -69,11 +74,13 @@ function sendsnap {
 	return $?	
 }
 
+
 # target remote
 function forcesendsnap {
 	zfs send $1 | $SSH $SSH_CONNOPT "sudo zfs receive -F $2"
 	return $?
 }
+
 
 # sync localdataset remotedataset
 function dataleech_sync {
@@ -98,39 +105,29 @@ function dataleech_sync {
 # sync_all_snaps localdataset remotedataset
 function sync_all_snaps {
 	while true; do
+
+		check_havetosync $1 $2
+		if [ $? -ne 0 ]; then
+			echo "exiting"
+			return 0
+		fi
+
 		dataleech_sync $1 $2
 		if [ $? -ne 0 ]; then
+			echo "sync failed"
 			return 1
-		fi
-			
-		check_havetosync $1 $2
-		if [ $? -eq 0 ]; then
-			return 0
 		fi
 	done
 }
 
 
 function dataleech_main {
-	
-	TOSYNC=""
-
 	for i in $CFG; do
 		REMOTE=$(echo $i | cut -f2 -d':')
 		LOCAL=$(echo $i | cut -f1 -d ':')
-		
-		check_havetosync $LOCAL $REMOTE
-		if [ $? -eq 0 ]; then
-			TOSYNC="$TOSYNC$LOCAL:$REMOTE"$'\n'
-		fi
-	done
-
-	
-	for i in $TOSYNC; do
-		REMOTE=$(echo $i | cut -f2 -d':')
-		LOCAL=$(echo $i | cut -f1 -d ':')
+		echo $LOCAL $REMOTE
 		sync_all_snaps $LOCAL $REMOTE	
 	done
 }
 
-sync_all_snaps zroot/data/home tank/backup/dataleech/zara/home
+dataleech_main

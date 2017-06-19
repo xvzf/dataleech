@@ -1,7 +1,7 @@
 pkgname=dataleech
 pkgdesc='Dataleech - a backup plan using ZFS...'
 pkgver=0.2
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='https://github.com/xvzf/dataleech'
 license=('GPL3')
@@ -39,4 +39,5 @@ package() {
   install -Dm755 "${srcdir}/bazel-genfiles/archscripts/snapsend" "${pkgdir}/usr/libexec/dataleech/snapsend"
   install -Dm755 "${srcdir}/bazel-genfiles/archscripts/snapreceive" "${pkgdir}/usr/libexec/dataleech/snapreceive"
   install -Dm755 "${srcdir}/bazel-genfiles/archscripts/superman" "${pkgdir}/usr/bin/superman"
+  install -Dm755 "${srcdir}/bazel-genfiles/archscripts/snapsync" "${pkgdir}/usr/bin/snapsync"
 }

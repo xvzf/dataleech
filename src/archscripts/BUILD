@@ -21,3 +21,12 @@ genrule(
 	cmd = "cat $< > $@"
 )
 
+
+
+genrule(
+	name = "rule_snapsync",
+	srcs = ["scripts/snapsync"],
+	outs = ["snapsync"],
+	cmd = "cat $< > $@"
+)
+
