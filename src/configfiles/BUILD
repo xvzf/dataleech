@@ -4,3 +4,10 @@ genrule(
 	outs = ["datasets"],
 	cmd = "cat $< > $@"
 )
+
+genrule(
+	name = "dataleechremoteconf",
+	srcs = ["etc/dataleech/remoteoptions"],
+	outs = ["remoteoptions"],
+	cmd = "cat $< > $@"
+)

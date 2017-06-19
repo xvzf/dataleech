@@ -1,14 +1,14 @@
 pkgname=dataleech
 pkgdesc='Dataleech - a backup plan using ZFS...'
 pkgver=0.2
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url='https://github.com/xvzf/dataleech'
 license=('GPL3')
 depends=('python' 'mbuffer')
 makedepends=('bazel')
 provides=('newshortsnap' 'newdailysnap' 'newcustomsnap' 'superman')
-backup=('etc/dataleech/datasets')
+backup=('etc/dataleech/datasets' 'remoteoptions')
 
 build() {
   cd "${srcdir}"
@@ -34,6 +34,7 @@ package() {
   mkdir -p ${pkgdir}/etc/{dataleech,cron.d}
 
   install -Dm644 "${srcdir}/bazel-genfiles/configfiles/datasets" "${pkgdir}/etc/dataleech/datasets"
+  install -Dm644 "${srcdir}/bazel-genfiles/configfiles/renoteoptions" "${pkgdir}/etc/dataleech/renoteoptions"
   install -Dm644 "${srcdir}/bazel-genfiles/cronfiles/dataleech" "${pkgdir}/etc/cron.d/dataleech" 
   install -Dm755 "${srcdir}/bazel-genfiles/cronfiles/dataleech_daily" "${pkgdir}/etc/cron.daily/dataleech"
   install -Dm755 "${srcdir}/bazel-genfiles/archscripts/snapsend" "${pkgdir}/usr/libexec/dataleech/snapsend"
