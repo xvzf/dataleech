@@ -1,6 +1,6 @@
 #!/bin/python3
 """
-dataleech - a backup plan using zfs... 
+dataleech - a backup plan using zfs...
 Copyright (C) 2017 Matthias Riegler <matthias@xvzf.tech>
 
 This program is distributed in the hope that it will be useful,
@@ -19,7 +19,7 @@ def main():
     parser.add_argument('--keep', help='how many snaps to keep', nargs=1)
 
     args = parser.parse_args()
-    
+
     if not args.keep:
         sys.exit(-1)
 

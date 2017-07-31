@@ -1,6 +1,6 @@
 #!/bin/python3
 """
-dataleech - a backup plan using zfs... 
+dataleech - a backup plan using zfs...
 Copyright (C) 2017 Matthias Riegler <matthias@xvzf.tech>
 
 This program is distributed in the hope that it will be useful,
@@ -18,12 +18,12 @@ import sys
 def main():
     parser = argparse.ArgumentParser(description="DATALEECH CUSTOM SNAP - A ZFS BACKUP SOLUTION FOR DESKTOP COMPUTERS")
     parser.add_argument('--name', help='custom snap name', nargs=1)
-    
+
     args = parser.parse_args()
 
     if not args.name:
-        sys.exit(-1) 
-    
+        sys.exit(-1)
+
     if not LocalSnapManager(ConfReader().getlocaldatasets()).newcustomsnap(name=args.name[0]):
         sys.exit(-1)
 

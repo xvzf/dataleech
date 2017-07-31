@@ -1,6 +1,6 @@
 #!/bin/python3
 """
-dataleech - a backup plan using zfs... 
+dataleech - a backup plan using zfs...
 Copyright (C) 2017 Matthias Riegler <matthias@xvzf.tech>
 
 This program is distributed in the hope that it will be useful,
@@ -15,7 +15,7 @@ import argparse
 import sys
 
 class ConfReader(object):
-    
+
     confdict = {}
 
     def __init__(self, configfilepath="/etc/dataleech/datasets"):
@@ -24,7 +24,7 @@ class ConfReader(object):
                 self.confdict = json.loads(re.sub('#.*?\r?\n', '', file.read()))
         except IOError:
             print("[-] Could not open config file, exiting")
-            sys.exit(1) 
+            sys.exit(1)
         except json.decoder.JSONDecodeError:
             print("[-] Invalid config file, fix config")
             sys.exit(1)

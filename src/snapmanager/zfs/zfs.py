@@ -1,6 +1,6 @@
 #!/bin/python3
 """
-dataleech - a backup plan using zfs... 
+dataleech - a backup plan using zfs...
 Copyright (C) 2017 Matthias Riegler <matthias@xvzf.tech>
 
 This program is distributed in the hope that it will be useful,
@@ -17,7 +17,7 @@ import subprocess
 # Only needed functions implemented!
 class ZFS(object):
     """TODO for ZFS"""
-    
+
     def __init__(self):
         super(ZFS, self).__init__()
 
@@ -46,18 +46,18 @@ class ZFS(object):
 
     # Get list of datasets
     def getdatasets(self):
-        
+
         if not self.checkrequirements:
             return None
 
         out, ecode = self._exec("zfs", "list")
 
         if ecode == 0:
-            
+
             datasetlist = []
 
             for i in out.split("\n")[1:(len(out.split("\n"))-1)]:
-            
+
                 datasetlist.append(i.split(" ")[0])
 
             return datasetlist
@@ -90,7 +90,7 @@ class ZFS(object):
 
 
     def snapshot(self, name, dataset):
-        
+
         if not self.checkrequirements:
             return False
 
@@ -114,7 +114,7 @@ class ZFS(object):
 
         if not self.checkrequirements:
             return False
-            
+
         out, ecode = self._exec("zfs", "destroy " + dataset  + "@" + name)
 
         if ecode == 0:
@@ -131,7 +131,7 @@ class ZFS(object):
             sarr.append("-i")
             sarr.append(origin)
         sarr.append(name)
-        
+
         cp_out = subprocess.run(sarr, stdout=subprocess.PIPE)
 
         return cp_out.returncode
@@ -142,7 +142,7 @@ class ZFS(object):
         if force:
             sarr.append("-F")
         sarr.append(targetdataset)
-        
+
         cp_out = subprocess.run(sarr, stdout=subprocess.PIPE)
 
         return cp_out.returncode

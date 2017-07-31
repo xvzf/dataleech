@@ -1,6 +1,6 @@
 #!/bin/python3
 """
-dataleech - a backup plan using zfs... 
+dataleech - a backup plan using zfs...
 Copyright (C) 2017 Matthias Riegler <matthias@xvzf.tech>
 
 This program is distributed in the hope that it will be useful,
@@ -28,8 +28,8 @@ class LocalSnapManager(object):
 
         for i in self.datasets:
             self._importsnaps_dataset(i)
-    
-    
+
+
     def gentimestamp(self):
         return datetime.now().strftime('%Y-%m-%d_%H-%M')
 
@@ -47,8 +47,8 @@ class LocalSnapManager(object):
             if "dataleech-short-" in i:
                 if i not in self.shortsnaps:
                     self.shortsnaps.append(i)
-       
-    
+
+
     def snapshot(self, name):
         status = True
 
@@ -65,7 +65,7 @@ class LocalSnapManager(object):
 
     def newshortsnap(self):
         snapname = "dataleech-short-" + self.gentimestamp()
-        
+
         status = self.snapshot(snapname)
 
         if status:
@@ -75,8 +75,8 @@ class LocalSnapManager(object):
                 delname = self.shortsnaps.pop(0)
                 for i in self.datasets:
                     self.localzfs.destroysnapshot(delname, i)
-            
-        return status 
+
+        return status
 
 
     def newdailysnap(self):

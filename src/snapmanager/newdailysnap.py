@@ -1,6 +1,6 @@
 #!/bin/python3
 """
-dataleech - a backup plan using zfs... 
+dataleech - a backup plan using zfs...
 Copyright (C) 2017 Matthias Riegler <matthias@xvzf.tech>
 
 This program is distributed in the hope that it will be useful,
@@ -15,7 +15,7 @@ import sys
 
 
 def main():
-    
+
     if not LocalSnapManager(ConfReader().getlocaldatasets()).newdailysnap():
         sys.exit(-1)
 
