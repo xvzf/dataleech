@@ -16,7 +16,7 @@ import sys
 
 def main():
 
-    if not LocalSnapManager(ConfReader().getlocaldatasets()).newdailysnap():
+    if not LocalSnapManager(ConfReader().getdailysnapdatasets()).newdailysnap():
         sys.exit(-1)
 
 if __name__ == '__main__':

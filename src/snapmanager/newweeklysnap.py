@@ -14,22 +14,13 @@ from snapmanager import LocalSnapManager
 from confreader import ConfReader
 import sys
 
-
 def main():
-    parser = argparse.ArgumentParser(description="DATALEECH CUSTOM SNAP - A ZFS BACKUP SOLUTION FOR DESKTOP COMPUTERS")
-    parser.add_argument('--name', help='custom snap name', nargs=1)
-    parser.add_argument('--dataset', help='custom snap name', nargs=1)
+    parser = argparse.ArgumentParser(description="DATALEECH - A ZFS BACKUP SOLUTION FOR DESKTOP COMPUTERS")
 
     args = parser.parse_args()
 
-    if not args.name:
+    if not LocalSnapManager(ConfReader().getweeklysnapdatasets()).newweeklysnap():
         sys.exit(-1)
-
-    if args.dataset:
-        if LocalSnapManager(args.dataset).newcustomsnap(name=args.name[0]):
-            sys.exit(0)
-
-    sys.exit(-1)
 
 if __name__ == '__main__':
     main()

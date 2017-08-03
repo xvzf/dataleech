@@ -33,11 +33,14 @@ class ConfReader(object):
         except Exception as e:
             print("[-] Unknown exception, please report as an issue on github:\n" + str(e))
 
-    def getrelatedsets(self):
-        return self.confdict
+    def getshortsnapdatasets(self):
+        return self.confdict["short"].keys()
 
-    def getlocaldatasets(self):
-        return self.confdict.keys()
+    def getdailysnapdatasets(self):
+        return self.confdict["daily"].keys()
+
+    def getweeklysnapdatasets(self):
+        return self.confdict["weekly"].keys()
 
 
 if __name__ == "__main__":

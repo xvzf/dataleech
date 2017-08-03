@@ -23,7 +23,7 @@ def main():
     if not args.keep:
         sys.exit(-1)
 
-    if not LocalSnapManager(ConfReader().getlocaldatasets()).newshortsnap():
+    if not LocalSnapManager(ConfReader().getshortsnapdatasets()).newshortsnap():
         sys.exit(-1)
 
 if __name__ == '__main__':

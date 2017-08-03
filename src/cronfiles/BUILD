@@ -12,3 +12,10 @@ genrule(
 	outs = ["dataleech_daily"],
 	cmd = "cat $< > $@"
 )
+
+genrule(
+	name = "rule_dataleech_weekly",
+	srcs = ["etc/dataleech.weekly"],
+	outs = ["dataleech_weekly"],
+	cmd = "cat $< > $@"
+)

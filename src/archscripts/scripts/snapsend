@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if [[ -z $1 || -z $2 ]]; then
-	exit 1
-fi
-
-zfs send $2 $3 $4 | mbuffer -s 128k -m 1G  -O "$1:9090"
-exit $?

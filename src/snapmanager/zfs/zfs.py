@@ -121,28 +121,3 @@ class ZFS(object):
             return True
 
         return False
-
-
-    def send(self, ip, name, origin=None):
-        sarr = []
-        sarr.append("/usr/libexec/dataleech/snapsend")
-        sarr.append(ip)
-        if origin:
-            sarr.append("-i")
-            sarr.append(origin)
-        sarr.append(name)
-
-        cp_out = subprocess.run(sarr, stdout=subprocess.PIPE)
-
-        return cp_out.returncode
-
-    def receive(self, targetdataset, force=False):
-        sarr = []
-        sarr.append("/usr/libexec/dataleech/snapreceive")
-        if force:
-            sarr.append("-F")
-        sarr.append(targetdataset)
-
-        cp_out = subprocess.run(sarr, stdout=subprocess.PIPE)
-
-        return cp_out.returncode

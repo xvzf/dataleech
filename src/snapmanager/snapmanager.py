@@ -15,10 +15,11 @@ from datetime import datetime
 # Manages snapshots created by dataleech
 class LocalSnapManager(object):
 
-    datasets = []
+    datasets =      []
 
-    dailysnaps = []
-    shortsnaps = []
+    dailysnaps =    []
+    shortsnaps =    []
+    weeklysnaps =   []
 
     def __init__(self, datasets, keep=5):
         super(LocalSnapManager, self).__init__()
@@ -47,6 +48,10 @@ class LocalSnapManager(object):
             if "dataleech-short-" in i:
                 if i not in self.shortsnaps:
                     self.shortsnaps.append(i)
+
+            if "dataleech-weekly-" in i:
+                if i not in self.shortsnaps:
+                    self.weeklysnaps.append(i)
 
 
     def snapshot(self, name):
@@ -84,6 +89,10 @@ class LocalSnapManager(object):
 
         return self.snapshot(snapname)
 
+    def newweeklysnap(self):
+        snapname = "dataleech-weekly-" + self.gentimestamp_daily()
+
+        return self.snapshot(snapname)
 
     def newcustomsnap(self, name):
         snapname = "dataleech-custom-" + name + "-" +  self.gentimestamp()

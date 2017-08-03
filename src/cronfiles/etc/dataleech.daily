@@ -1,3 +1,3 @@
 #!/bin/bash
 
-newdailysnap --datasets $(cat /etc/dataleech/datasets)
+/usr/libexec/dataleech/newdailysnap

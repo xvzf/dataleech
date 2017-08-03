@@ -25,10 +25,17 @@ py_binary(
 	name = "newcustomsnap",
 	srcs = ["newcustomsnap.py"],
 	deps = [":snapmanager"]
+)
 
+
+py_binary(
+	name = "newweeklysnap",
+	srcs = ["newweeklysnap.py"],
+	deps = [":snapmanager"]
 )
 
 py_binary(
 	name = "confreader",
 	srcs = ["confreader.py"]	
 )
+

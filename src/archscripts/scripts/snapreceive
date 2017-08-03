@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if [[ -z $1  ]]; then
-	exit 1
-fi
-
-mbuffer -s 128k -m 1G -I 9090 | zfs receive $1 $2
-exit $?
-
