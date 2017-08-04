@@ -1,13 +1,13 @@
 pkgname=dataleech
 pkgdesc='Dataleech - a backup plan using ZFS...'
-pkgver=0.5
+pkgver=0.6
 pkgrel=2
 arch=('x86_64')
 url='https://github.com/xvzf/dataleech'
 license=('GPL3')
 depends=('python' 'mbuffer')
 makedepends=('bazel')
-provides=('newshortsnap' 'newdailysnap' 'newcustomsnap' 'superman')
+provides=('newcustomsnap' 'superman')
 backup=('etc/dataleech/datasets')
 
 build() {
