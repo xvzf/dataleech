@@ -34,7 +34,7 @@ class ZFS(object):
 
         cp_out = subprocess.run(sarr, stdout=subprocess.PIPE)
 
-        return (cp_out.stdout.decode('UTF-8'), cp_out.returncode)
+        return (cp_out.stdout.decode('UTF-8')[0:(len(cp_out.stdout.decode('UTF-8'))-1)], cp_out.returncode)
 
 
     # ZFS Utils need superuser privileges
@@ -47,18 +47,10 @@ class ZFS(object):
     # Get list of datasets
     def getdatasets(self):
 
-        if not self.checkrequirements:
-            return None
-
-        out, ecode = self._exec("zfs", "list")
+        out, ecode = self._exec("zfs", "list -H -o name")
 
         if ecode == 0:
-
-            datasetlist = []
-
-            for i in out.split("\n")[1:(len(out.split("\n"))-1)]:
-
-                datasetlist.append(i.split(" ")[0])
+            datasetlist = out.split("\n")
 
             return datasetlist
 
@@ -68,23 +60,16 @@ class ZFS(object):
     # Returns a list of all snapshots for a defined dataset/subdataset
     def getsnaplist(self, dataset, subdataset=None):
 
-        if not self.checkrequirements:
-            return None
-
         if subdataset:
             dataset = dataset + "/" + subdataset
 
-        ssnaplist, ecode = self._exec("zfs", "list -r -t snapshot " + dataset)
+        ssnaplist, ecode = self._exec("zfs", "list -H -t snapshot -o name -s creation -r " + dataset)
 
         if ecode < 0:
             return []
 
-        dirtysnaplist = ssnaplist.split("\n")[1:(len(ssnaplist.split("\n")) - 1)]
-
         snaplist = []
-
-        for i in dirtysnaplist:
-            snaplist.append(i.split(" ")[0].split("@")[1])
+        for i in ssnaplist.split("\n"): snaplist.append(i.split("@")[1])
 
         return snaplist
 

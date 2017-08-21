@@ -60,6 +60,9 @@ class ConfReader(object):
         return return_datasets
 
 
+    def getrelatedsets(self):
+        pass
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

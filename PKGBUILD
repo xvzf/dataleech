@@ -1,7 +1,7 @@
 pkgname=dataleech
 pkgdesc='Dataleech - a backup plan using ZFS...'
 pkgver=0.6
-pkgrel=2
+pkgrel=0
 arch=('x86_64')
 url='https://github.com/xvzf/dataleech'
 license=('GPL3')
