@@ -34,13 +34,31 @@ class ConfReader(object):
             print("[-] Unknown exception, please report as an issue on github:\n" + str(e))
 
     def getshortsnapdatasets(self):
-        return self.confdict["short"].keys()
+        return list(set(self.confdict["short"].keys()))
 
     def getdailysnapdatasets(self):
-        return self.confdict["daily"].keys()
+        return list(set(self.confdict["daily"].keys()))
 
     def getweeklysnapdatasets(self):
-        return self.confdict["weekly"].keys()
+        return list(set(self.confdict["weekly"].keys()))
+
+    def getsyncdatasets(self):
+        related_datasets = []
+
+        for src, dest in self.confdict["daily"].items():
+            related_datasets.append((src, dest))
+
+        for src, dest in self.confdict["weekly"].items():
+            related_datasets.append((src, dest))
+
+        return_datasets = []
+
+        for src, dest in  list(set(related_datasets)):
+            if dest != "none":
+                return_datasets.append((src,dest))
+
+        return return_datasets
+
 
 
 if __name__ == "__main__":
@@ -55,5 +73,5 @@ if __name__ == "__main__":
 
     c = ConfReader(cfgpath)
 
-    for localdataset, remotedataset in c.getrelatedsets().items():
-        print("%s:%s" % (localdataset, remotedataset) )
+    for i in c.getsyncdatasets():
+        print("%s:%s" % i)
