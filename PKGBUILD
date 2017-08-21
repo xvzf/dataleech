@@ -13,6 +13,13 @@ backup=('etc/dataleech/datasets')
 build() {
     cd "${srcdir}"
     bazel build '...'
+
+    # Remove manifests
+    cd ./bazel-bin/snapmanager
+    for i in $(find . -name MANIFEST -type f); do
+        echo "Deleting $i"
+        rm -f $i
+    done
 }
 
 package() {
@@ -44,3 +51,5 @@ package() {
     install -Dm755 "${srcdir}/bazel-genfiles/archscripts/superman"		"${pkgdir}/usr/bin/superman"
     install -Dm755 "${srcdir}/bazel-genfiles/archscripts/snapsync"		"${pkgdir}/usr/bin/snapsync"
 }
+
+# vim:set ts=8 sts=2 sw=2 et:
