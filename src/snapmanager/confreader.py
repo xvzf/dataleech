@@ -42,6 +42,9 @@ class ConfReader(object):
     def getweeklysnapdatasets(self):
         return self.confdict["weekly"].keys()
 
+    def getrelatedsets(self):
+        pass
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
