@@ -35,14 +35,9 @@ py_binary(
 )
 
 py_binary(
-  name = "confreader",
-  srcs = ["confreader.py"]
-)
-
-py_binary(
   name = "snapsync",
   srcs = ["snapsync.py"],
-  deps = [":zfs"]
+  deps = [":snapmanager"]
 )
 
 # vim:set ts=8 sts=2 sw=2 et:
