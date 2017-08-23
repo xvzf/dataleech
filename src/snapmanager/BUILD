@@ -41,7 +41,7 @@ py_binary(
 
 py_binary(
   name = "snapsync",
-  srcs = ["snapsync.py"]
+  srcs = ["snapsync.py"],
   deps = [":zfs"]
 )
 
