@@ -27,7 +27,7 @@ package() {
     mkdir -p ${pkgdir}/etc/{dataleech,cron.d}
 
 
-    for i in $(echo newdailysnap newshortsnap newcustomsnap confreader newweeklysnap snapsync)
+    for i in $(echo newdailysnap newshortsnap newcustomsnap newweeklysnap snapsync)
     do
         chmod 755 "${srcdir}/bazel-bin/snapmanager/${i}"
         sed "s#os.path.abspath(sys.argv\[0\])#'/usr/libexec/dataleech/${i}'#g" -i "${srcdir}/bazel-bin/snapmanager/${i}"
@@ -39,7 +39,6 @@ package() {
         chmod 755 -R "${pkgdir}/usr/libexec/dataleech/"
     done
 
-    mv "${pkgdir}/usr/bin/confreader"						"${pkgdir}/usr/libexec/dataleech/confreader"
     mv "${pkgdir}/usr/bin/newshortsnap"						"${pkgdir}/usr/libexec/dataleech/newshortsnap"
     mv "${pkgdir}/usr/bin/newdailysnap"						"${pkgdir}/usr/libexec/dataleech/newdailysnap"
     mv "${pkgdir}/usr/bin/newweeklysnap"					"${pkgdir}/usr/libexec/dataleech/newweeklysnap"
