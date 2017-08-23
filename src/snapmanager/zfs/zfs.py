@@ -68,6 +68,9 @@ class ZFS(object):
         if ecode < 0:
             return []
 
+        if len(ssnaplist) == 0:
+            return []
+
         snaplist = []
         for i in ssnaplist.split("\n"): snaplist.append(i.split("@")[1])
 

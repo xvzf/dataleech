@@ -59,14 +59,19 @@ class ConfReader(object):
 
         return return_datasets
 
+    def getlocalsyncdatasets(self):
+        returnlist = []
+        for src, dst in self.getsyncdatasets():
+            if "local@" in dst:
+                returnlist.append((src,dst[6:]))
 
-    def getrelatedsets(self):
-        pass
+        return returnlist
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--open', help='specify the path', nargs=1)
+    parser.add_argument('--localsync', help='getlocalsync datasets', action='store_true')
 
     args = parser.parse_args()
 
@@ -76,5 +81,6 @@ if __name__ == "__main__":
 
     c = ConfReader(cfgpath)
 
-    for i in c.getsyncdatasets():
-        print("%s:%s" % i)
+    if args.localsync:
+        for i in c.getlocalsyncdatasets():
+            print("%s:%s" % i)

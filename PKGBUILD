@@ -1,13 +1,13 @@
 pkgname=dataleech
 pkgdesc='Dataleech - a backup plan using ZFS...'
-pkgver=0.6
+pkgver=0.7
 pkgrel=0
 arch=('x86_64')
 url='https://github.com/xvzf/dataleech'
 license=('GPL3')
 depends=('python' 'mbuffer')
 makedepends=('bazel')
-provides=('newcustomsnap' 'superman')
+provides=('newcustomsnap' 'superman' 'snapsync')
 backup=('etc/dataleech/datasets')
 
 build() {
@@ -27,7 +27,7 @@ package() {
     mkdir -p ${pkgdir}/etc/{dataleech,cron.d}
 
 
-    for i in $(echo newdailysnap newshortsnap newcustomsnap confreader newweeklysnap)
+    for i in $(echo newdailysnap newshortsnap newcustomsnap confreader newweeklysnap snapsync)
     do
         chmod 755 "${srcdir}/bazel-bin/snapmanager/${i}"
         sed "s#os.path.abspath(sys.argv\[0\])#'/usr/libexec/dataleech/${i}'#g" -i "${srcdir}/bazel-bin/snapmanager/${i}"
