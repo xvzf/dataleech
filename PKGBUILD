@@ -49,7 +49,6 @@ package() {
     install -Dm755 "${srcdir}/bazel-genfiles/cronfiles/dataleech_daily"		"${pkgdir}/etc/cron.daily/dataleech"
     install -Dm755 "${srcdir}/bazel-genfiles/cronfiles/dataleech_weekly"	"${pkgdir}/etc/cron.weekly/dataleech"
     install -Dm755 "${srcdir}/bazel-genfiles/archscripts/superman"		"${pkgdir}/usr/bin/superman"
-    install -Dm755 "${srcdir}/bazel-genfiles/archscripts/snapsync"		"${pkgdir}/usr/bin/snapsync"
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
