@@ -37,18 +37,19 @@ class SnapSync(object):
             if i not in self.dst_snaps:
                 return i
 
+
         return None
 
     def initial_send(self, tosync, remote=None):
         if not remote:
-            command = "zfs send %s | zfs receive -F %s" % (self.src + "@" + tosync, self.dst)
+            command = "zfs send %s | pv | zfs receive -F %s" % (self.src + "@" + tosync, self.dst)
             status = os.system(command)
             if status != 0:
                 sys.exit(-1)
 
     def incremental_send(self, lastsynced, tosync, remote=None):
         if not remote:
-            command = "zfs send -i %s %s | zfs receive %s" %    (self.src+"@"+lastsynced,\
+            command = "zfs send -i %s %s | pv | zfs receive %s" %    (self.src+"@"+lastsynced,\
                                                                 self.src+"@"+tosync,self.dst)
             status = os.system(command)
             if status != 0:
@@ -57,6 +58,11 @@ class SnapSync(object):
     def sync_local(self, src, dst):
         self.src = src
         self.dst = dst
+
+        # Check if destination pool exists
+        if not ZFS().check_pool_exists(dst.split("/")[0]):
+            return
+
         while True:
             tosync = self.get_next_sync_snapshot()
             if not tosync:

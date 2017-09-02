@@ -43,6 +43,14 @@ class ZFS(object):
             return False
         return True
 
+    # Check if a pool exists
+    def check_pool_exists(self, poolname):
+        out, ecode = self._exec("zpool", "status %s -x" % poolname)
+
+        if ecode ==0:
+            return True
+        return False
+
 
     # Get list of datasets
     def getdatasets(self):

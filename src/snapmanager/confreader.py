@@ -46,10 +46,10 @@ class ConfReader(object):
         related_datasets = []
 
         for src, dest in self.confdict["daily"].items():
-            related_datasets.append((src, dest))
+            for i in dest.split(";"): related_datasets.append((src, i))
 
         for src, dest in self.confdict["weekly"].items():
-            related_datasets.append((src, dest))
+            for i in dest.split(";"): related_datasets.append((src, i))
 
         return_datasets = []
 
