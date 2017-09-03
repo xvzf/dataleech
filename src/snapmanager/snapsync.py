@@ -75,8 +75,12 @@ class SnapSync(object):
         self.sshopts=sshopts
 
         # Check if destination pool exists
-        if not ZFS().check_pool_exists(dst.split("/")[0]):
-            return
+        if not self.sshopts:
+            if not ZFS().check_pool_exists(dst.split("/")[0]):
+                return
+        else:
+            if not remoteZFS(self.sshopts).check_pool_exists(dst.split("/")[0]):
+                return
 
         while True:
             tosync = self.get_next_sync_snapshot()

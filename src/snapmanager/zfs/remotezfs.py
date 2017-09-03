@@ -19,7 +19,6 @@ class remoteZFS(ZFS):
         self.sshopts =sshopts
 
     def _exec(self, cmdname, args):
-        print("cmdname: %s, args: %s" % (cmdname,args))
 
         if cmdname not in ["zfs", "zpool"]:
             return (None, None)
