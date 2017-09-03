@@ -11,3 +11,4 @@ GNU General Public License for more details.
 
 __all__ = ["zfs"]
 from zfs.zfs import ZFS
+from zfs.remotezfs import remoteZFS

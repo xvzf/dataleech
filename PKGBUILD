@@ -1,11 +1,11 @@
 pkgname=dataleech
 pkgdesc='Dataleech - a backup plan using ZFS...'
-pkgver=0.7
-pkgrel=3
+pkgver=0.9
+pkgrel=0
 arch=('x86_64')
 url='https://github.com/xvzf/dataleech'
 license=('GPL3')
-depends=('python' 'mbuffer')
+depends=('zfs-utils' 'python' 'pv' 'openssh')
 makedepends=('bazel')
 provides=('newcustomsnap' 'superman' 'snapsync')
 backup=('etc/dataleech/datasets')
@@ -43,7 +43,6 @@ package() {
     mv "${pkgdir}/usr/bin/newdailysnap"						"${pkgdir}/usr/libexec/dataleech/newdailysnap"
     mv "${pkgdir}/usr/bin/newweeklysnap"					"${pkgdir}/usr/libexec/dataleech/newweeklysnap"
     install -Dm644 "${srcdir}/bazel-genfiles/configfiles/datasets"		"${pkgdir}/etc/dataleech/datasets"
-    install -Dm644 "${srcdir}/bazel-genfiles/configfiles/remoteoptions"		"${pkgdir}/etc/dataleech/remoteoptions"
     install -Dm644 "${srcdir}/bazel-genfiles/cronfiles/dataleech"		"${pkgdir}/etc/cron.d/dataleech"
     install -Dm755 "${srcdir}/bazel-genfiles/cronfiles/dataleech_daily"		"${pkgdir}/etc/cron.daily/dataleech"
     install -Dm755 "${srcdir}/bazel-genfiles/cronfiles/dataleech_weekly"	"${pkgdir}/etc/cron.weekly/dataleech"

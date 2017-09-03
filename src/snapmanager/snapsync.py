@@ -10,7 +10,7 @@ GNU General Public License for more details.
 """
 
 from confreader import ConfReader
-from zfs import ZFS
+from zfs import ZFS, remoteZFS
 import os
 import sys
 
@@ -26,10 +26,14 @@ class SnapSync(object):
             if "dataleech-daily" in i or "dataleech-weekly" in i:
                 self.src_snaps.append(i)
 
-        for i in ZFS().getsnaplist(self.dst):
-            if "dataleech-daily" in i or "dataleech-weekly" in i:
-                self.dst_snaps.append(i)
-
+        if not self.sshopts:
+            for i in ZFS().getsnaplist(self.dst):
+                if "dataleech-daily" in i or "dataleech-weekly" in i:
+                    self.dst_snaps.append(i)
+        else:
+            for i in remoteZFS(self.sshopts).getsnaplist(self.dst):
+                if "dataleech-daily" in i or "dataleech-weekly" in i:
+                    self.dst_snaps.append(i)
 
     def get_next_sync_snapshot(self):
         self.update_snaps()
@@ -37,27 +41,38 @@ class SnapSync(object):
             if i not in self.dst_snaps:
                 return i
 
-
         return None
 
-    def initial_send(self, tosync, remote=None):
-        if not remote:
-            command = "zfs send %s | pv | zfs receive -F %s" % (self.src + "@" + tosync, self.dst)
-            status = os.system(command)
-            if status != 0:
-                sys.exit(-1)
+    def initial_send(self, tosync):
+        if not self.sshopts:
+            command = "zfs send %s | pv | zfs receive -F %s" % (self.src+"@"+tosync,\
+                                                                self.dst)
+        else:
+            command = "zfs send %s | pv | ssh %s zfs receive -F %s" % (self.src+"@"+tosync,\
+                                                                       self.sshopts,\
+                                                                       self.dst)
+        status = os.system(command)
+        if status != 0:
+            sys.exit(-1)
 
-    def incremental_send(self, lastsynced, tosync, remote=None):
-        if not remote:
-            command = "zfs send -i %s %s | pv | zfs receive %s" %    (self.src+"@"+lastsynced,\
-                                                                self.src+"@"+tosync,self.dst)
-            status = os.system(command)
-            if status != 0:
-                sys.exit(-1)
+    def incremental_send(self, lastsynced, tosync):
+        if not self.sshopts:
+            command = "zfs send -i %s %s | pv | zfs receive %s" % (self.src+"@"+lastsynced,\
+                                                                   self.src+"@"+tosync,self.dst)
+        else:
+            command = "zfs send -i %s %s | pv | ssh %s zfs receive %s" % (self.src+"@"+lastsynced,\
+                                                                            self.src+"@"+tosync,\
+                                                                            self.sshopts,
+                                                                            self.dst)
+        status = os.system(command)
+        if status != 0:
+            sys.exit(-1)
 
-    def sync_local(self, src, dst):
+
+    def sync(self, src, dst, sshopts=None):
         self.src = src
         self.dst = dst
+        self.sshopts=sshopts
 
         # Check if destination pool exists
         if not ZFS().check_pool_exists(dst.split("/")[0]):
@@ -77,12 +92,16 @@ class SnapSync(object):
                 self.incremental_send(lastsynced, tosync)
 
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 3:
         SnapSync().sync_local(sys.argv[1], sys.argv[2])
         sys.exit(0)
 
     for src, dst in ConfReader().getlocalsyncdatasets():
-        SnapSync().sync_local(src, dst)
+        SnapSync().sync(src, dst)
+
+    for src, dst in ConfReader().getremotesyncdatasets():
+        SnapSync().sync(src, dst, sshopts=ConfReader().get_sshopts())
 
     sys.exit(0)

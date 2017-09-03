@@ -1,6 +1,6 @@
 py_library(
   name = "zfs",
-  srcs = ["zfs/__init__.py", "zfs/zfs.py"]
+  srcs = ["zfs/__init__.py", "zfs/zfs.py", "zfs/remotezfs.py"]
 )
 
 py_library(

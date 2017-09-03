@@ -67,6 +67,18 @@ class ConfReader(object):
 
         return returnlist
 
+    def getremotesyncdatasets(self):
+        returnlist = []
+        for src, dst in self.getsyncdatasets():
+            if "remote@" in dst:
+                returnlist.append((src,dst[7:]))
+
+        return returnlist
+
+    def get_sshopts(self):
+        if "sshopts" in self.confdict.keys():
+            return self.confdict["sshopts"]
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

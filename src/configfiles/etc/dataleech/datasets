@@ -3,6 +3,24 @@
 #    "localdataset": "remotedataset",
 #    ...
 # }
+# Example config:
+#{
+#        "short": {
+#                "ztesla/data/home/xvzf":        "none"
+#
+#        },
+#        "daily": {
+#                "ztesla/data/home/xvzf":        "local@zbackup_04/homedirs/tesla/xvzf;local@zdata/backup/homedirs/tesla/xvzf"
+#        },
+#        "weekly": {
+#                "ztesla/ROOT/arch":             "none"
+#        },
+#        "sshopts":                              "-o Compression=no -i ~xvzf/.ssh/id_rsa_dataleech_tesla dataleech@tesla.xvzf.local"
+#
+#}
+
+
+
 {
 	"short": {
 
