@@ -87,3 +87,8 @@ def dataleech_cli():
     cli.add_command(snapshot)
     cli.add_command(sync)
     cli()
+
+
+if __name__ == "__main__":
+    # Makes it easier for testing
+    dataleech_cli()
