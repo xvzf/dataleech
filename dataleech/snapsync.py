@@ -142,13 +142,15 @@ class SnapSync(object):
 if __name__ == "__main__":
     # @TODO
     if len(sys.argv) == 3:
-        SnapSync().sync_local(sys.argv[1], sys.argv[2])
+        SnapSync(sys.argv[1], sys.argv[2])
         sys.exit(0)
 
     for src, dst in ConfReader().localsyncdatasets:
-        SnapSync().sync(src, dst)
+        SnapSync(src, dst)
 
-    for src, dst in ConfReader().remotesyncdatasets:
-        SnapSync().sync(src, dst, sshopts=ConfReader().sshopts)
+    sshopts = ConfReader().sshopts
+    if sshopts:
+        for src, dst in ConfReader().remotesyncdatasets:
+            SnapSync(src, dst, sshopts)
 
     sys.exit(0)
