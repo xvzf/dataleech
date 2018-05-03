@@ -25,13 +25,13 @@ package() {
   mkdir -p ${pkgdir}/etc/{dataleech,cron.d}
 
   install -Dm644 "${srcdir}/dataleech/other/configfiles/datasets" \
-                 "${pkgdir}/dataleech/etc/dataleech/datasets"
+                 "${pkgdir}/etc/dataleech/datasets"
 
   install -Dm644 "${srcdir}/dataleech/other/cronfiles/dataleech.10min" \
-                 "${pkgdir}/dataleech/etc/cron.d/dataleech"
+                 "${pkgdir}/etc/cron.d/dataleech"
 
   install -Dm755 "${srcdir}/dataleech/other/cronfiles/dataleech.daily" \
-                 "${pkgdir}/dataleech/etc/cron.daily/dataleech"
+                 "${pkgdir}/etc/cron.daily/dataleech"
 
   install -Dm755 "${srcdir}/dataleech/other/cronfiles/dataleech.weekly" \
                  "${pkgdir}/etc/cron.weekly/dataleech"
