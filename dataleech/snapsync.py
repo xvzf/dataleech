@@ -1,4 +1,3 @@
-#!/bin/python3
 """ Syncronize two datasets, either local->local or local->remote """
 
 #   dataleech - a backup plan using zfs...

@@ -1,4 +1,3 @@
-#!/bin/python3
 """ ZFS interface class for a remote ZFS installation """
 
 #   dataleech - a backup plan using zfs...

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """ ZFS Submodule based on the zfs commandline interface and subprocess """
 
 #   dataleech - a backup plan using zfs...

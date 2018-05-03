@@ -1,4 +1,3 @@
-#!/bin/python3
 """ ZFS interface class for local use """
 
 #   dataleech - a backup plan using zfs...
@@ -56,7 +55,7 @@ class ZFS(object):
         :param poolname: Poolname
         :returns: Exists or not
         """
-        out, ecode = self._exec("zpool", "status %s -x" % poolname)
+        out, ecode = self._exec("zpool", "status {} -x".format(poolname))
 
         if ecode == 0:
             return True

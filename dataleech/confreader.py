@@ -1,4 +1,3 @@
-#!/bin/python3
 """ Config parser for /etc/dataleech/datasets """
 
 #   dataleech - a backup plan using zfs...

@@ -1,4 +1,3 @@
-#!/bin/python3
 """ Snapshot manager for dataleech """
 
 #   dataleech - a backup plan using zfs...
@@ -97,7 +96,7 @@ class SnapManager(object):
 
         :returns: Success
         """
-        snapname = f"dataleech-short-{self._timestamp_short}"
+        snapname = "dataleech-short-".format({self._timestamp_short})
 
         status = self.snapshot(snapname)
 
@@ -119,7 +118,7 @@ class SnapManager(object):
 
         :returns: Success
         """
-        snapname = f"dataleech-daily-{self._timestamp}"
+        snapname = "dataleech-daily-{}".format(self._timestamp)
         return self.snapshot(snapname)
 
     def newweeklysnap(self):
@@ -128,7 +127,7 @@ class SnapManager(object):
 
         :returns: Success
         """
-        snapname = f"dataleech-weekly-{self._timestamp}"
+        snapname = "dataleech-weekly-{}".format(self._timestamp)
         return self.snapshot(snapname)
 
     def newcustomsnap(self, name):
@@ -138,5 +137,5 @@ class SnapManager(object):
         :name: Name of the snapshot ("dataleech-weekly-" + name)
         :returns: Success
         """
-        snapname = f"dataleech-weekly-{self._timestamp_short}"
+        snapname = "dataleech-weekly-{}".format(self._timestamp_short)
         return self.snapshot(snapname)

@@ -1,4 +1,3 @@
-#!/bin/python3
 """ Contains helper functions used in various parts of dataleech """
 
 #   dataleech - a backup plan using zfs...
