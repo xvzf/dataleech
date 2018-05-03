@@ -8,7 +8,6 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 
-from .confreader import ConfReader
 from .zfs import ZFS, RemoteZFS
 from .helper import get_dataleech_snapshots
 import os
@@ -33,48 +32,49 @@ class SnapSync(object):
         self.dst = dst
         self.sshopts = sshopts
 
+    def sync(self):
         # Check if destination pool exists
         if not self.sshopts:
-            if not ZFS().check_pool_exists(dst.split("/")[0]):
+            if not ZFS().check_pool_exists(self.dst.split("/")[0]):
                 return
         else:
             if not RemoteZFS(
                     self.sshopts).check_pool_exists(
-                    dst.split("/")[0]):
+                    self.dst.split("/")[0]):
                 return
+
+        # Update snapshots
+        self.update_snaps()
 
         while True:
             tosync = self.next_sync_snapshot
+            print(tosync)
             if not tosync:
-                print(f"Synced {self.src} to {self.dst} -> DONE")
+                print("Synced {} to {} -> DONE".format(self.src, self.dst))
                 break
             elif tosync == self.src_snaps[0]:
                 print("Initial send, forcing")
                 self.initial_send(tosync)
             else:
                 lastsynced = self.src_snaps[self.src_snaps.index(tosync) - 1]
-                print(f"Incremental send, {lastsynced} -> {tosync}")
+                print("Incremental send, {} -> {}".format(lastsynced, tosync))
                 self.incremental_send(lastsynced, tosync)
 
     def update_snaps(self):
         """
         Updates the source and destination snapshots
         """
-        self.src_snaps = []
+        self.src_snaps = get_dataleech_snapshots(ZFS(), self.src)["syncsnaps"]
         self.dst_snaps = []
-
-        # Source snapshots
-        tmp = get_dataleech_snapshots(ZFS(), self.src)
-        self.src_snaps = list(set(tmp["daily"] + tmp["weekly"]))
 
         if not self.sshopts:
             # Local destination snapshots
-            tmp = get_dataleech_snapshots(ZFS(), self.dst)
-            self.dst_snaps = list(set(tmp["daily"] + tmp["weekly"]))
+            self.dst_snaps = get_dataleech_snapshots(ZFS(),
+                                                     self.dst)["syncsnaps"]
         else:
             # Remote destination snapshots
-            tmp = get_dataleech_snapshots(RemoteZFS(self.sshopts), self.dst)
-            self.dst_snaps = list(set(tmp["daily"] + tmp["weekly"]))
+            self.dst_snaps = get_dataleech_snapshots(RemoteZFS(self.sshopts),
+                                                     self.dst)["syncsnaps"]
 
     @property
     def next_sync_snapshot(self):
@@ -99,12 +99,12 @@ class SnapSync(object):
         if not self.sshopts:
             # Local -> Local
             command = "zfs send {} | pv | zfs receive -F {}".format(
-                                self.src + "@" + tosync,
+                                "@".join([self.src, tosync]),
                                 self.dst)
         else:
             # Local -> Remote
             command = "zfs send {} | pv | ssh {} zfs receive -F {}".format(
-                                self.src + "@" + tosync,
+                                "@".join([self.src, tosync]),
                                 self.sshopts,
                                 self.dst)
         status = os.system(command)
@@ -122,34 +122,17 @@ class SnapSync(object):
         if not self.sshopts:
             # Local -> Local
             command = "zfs send -i {} {} | pv | zfs receive {}".format(
-                                self.src + "@" + lastsynced,
-                                self.src + "@" + tosync,
+                                "@".join([self.src, lastsynced]),
+                                "@".join([self.src, tosync]),
                                 self.dst)
         else:
             # Local -> Remote
             command = "zfs send -i {} {} | pv | ssh {} zfs receive {}".format(
-                                self.src + "@" + lastsynced,
-                                self.src + "@" + tosync,
+                                "@".join([self.src, lastsynced]),
+                                "@".join([self.src, tosync]),
                                 self.sshopts,
                                 self.dst)
 
         status = os.system(command)
         if status != 0:
             sys.exit(-1)
-
-
-if __name__ == "__main__":
-    # @TODO
-    if len(sys.argv) == 3:
-        SnapSync(sys.argv[1], sys.argv[2])
-        sys.exit(0)
-
-    for src, dst in ConfReader().localsyncdatasets:
-        SnapSync(src, dst)
-
-    sshopts = ConfReader().sshopts
-    if sshopts:
-        for src, dst in ConfReader().remotesyncdatasets:
-            SnapSync(src, dst, sshopts)
-
-    sys.exit(0)

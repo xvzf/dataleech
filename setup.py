@@ -27,7 +27,12 @@ setup(
 
     keywords="backup zfs",
     packages=find_packages(exclude=["contrib", "docs", "tests", "other"]),
-    install_requires=["flask"],
+    install_requires=["Click"],
+    entry_points={
+        "console_scripts": [
+            "dataleech = dataleech.__main__:dataleech_cli"
+        ]
+    },
     setup_requires=[],
     tests_require=[],
 

@@ -44,16 +44,17 @@ class SnapManager(object):
         for dataset in self.datasets:
             self._importsnaps_dataset(dataset)
 
+    @property
     def _timestamp(self):
         """
-        Generates a timestamp used for daily and weekly
-        snapshots
+        Timestamp used for daily and weekly snapshots
         """
         return datetime.now().strftime('%Y-%m-%d')
 
+    @property
     def _timestamp_short(self):
         """
-        Generates a timestamp used for the short snapshots
+        Timestamp used for the short snapshots
         """
         return datetime.now().strftime('%Y-%m-%d_%H-%M')
 
@@ -96,7 +97,8 @@ class SnapManager(object):
 
         :returns: Success
         """
-        snapname = "dataleech-short-".format({self._timestamp_short})
+        snapname = "dataleech-short-{}".format(self._timestamp_short)
+        print(snapname)
 
         status = self.snapshot(snapname)
 
@@ -119,6 +121,7 @@ class SnapManager(object):
         :returns: Success
         """
         snapname = "dataleech-daily-{}".format(self._timestamp)
+        print(snapname)
         return self.snapshot(snapname)
 
     def newweeklysnap(self):
@@ -128,6 +131,7 @@ class SnapManager(object):
         :returns: Success
         """
         snapname = "dataleech-weekly-{}".format(self._timestamp)
+        print(snapname)
         return self.snapshot(snapname)
 
     def newcustomsnap(self, name):
@@ -138,4 +142,5 @@ class SnapManager(object):
         :returns: Success
         """
         snapname = "dataleech-weekly-{}".format(self._timestamp_short)
+        print(snapname)
         return self.snapshot(snapname)
