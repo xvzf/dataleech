@@ -11,8 +11,8 @@ for i in $privilegedcmds; do
     if [[ $1 == $i ]]; then
         if [[ $(id -u) == "0" ]]; then
             echo "[!] command might modify system, snapshoting..."
-            newcustomsnap --name "pacman" \
-                --dataset $(getrootdataset)
+            dataleech snapshot custom --custom-name "pacman" \
+                                      --custom-dataset $(getrootdataset)
             if [ $? -eq 0 ]; then
                 echo "[+] Snapshot created"
                 break

@@ -14,7 +14,10 @@ from .confreader import ConfReader
 from .snapmanager import SnapManager
 
 
-def new_snapshot(snapshot_type, custom_dataset, custom_name=None):
+def new_snapshot(snapshot_type,
+                 short_keep=5,
+                 custom_dataset=None,
+                 custom_name=None):
     """
     Creates a new snapshot
 
@@ -23,7 +26,8 @@ def new_snapshot(snapshot_type, custom_dataset, custom_name=None):
     """
 
     if snapshot_type == "short":
-        return SnapManager(ConfReader().shortsnapdatasets).newshortsnap()
+        return SnapManager(ConfReader().shortsnapdatasets,
+                           keep=short_keep).newshortsnap()
     elif snapshot_type == "daily":
         return SnapManager(ConfReader().dailysnapdatasets).newdailysnap()
     elif snapshot_type == "weekly":

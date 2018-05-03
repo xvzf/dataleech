@@ -1,3 +1,3 @@
 PATH="/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 
-*/10 * * * * root /usr/libexec/dataleech/newshortsnap --keep 5
+*/10 * * * * root dataleech snapshot short --short-keep 5

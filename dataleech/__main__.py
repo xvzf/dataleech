@@ -48,11 +48,13 @@ def sync(local, remote, custom, custom_src, custom_dst):
 
 @click.command()
 @click.argument("name")
+@click.option("--short-keep", default=5,
+              help="How many short term snapshots to keep")
 @click.option("--custom-dataset", default=None,
               help="Custom dataset")
 @click.option("--custom-name", default=None,
               help="Custom snapshot name")
-def snapshot(name, custom_dataset, custom_name):
+def snapshot(name, short_keep, custom_dataset, custom_name):
     """
     Creates a snapshot, either short, daily, weekly or custom
     """
@@ -63,6 +65,7 @@ def snapshot(name, custom_dataset, custom_name):
         sys.exit(1)
 
     if new_snapshot(name,
+                    short_keep=short_keep,
                     custom_dataset=custom_dataset,
                     custom_name=custom_name):
         click.echo("[+] Created new  {} snapshot".format(name))
