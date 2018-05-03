@@ -24,21 +24,21 @@ package() {
   # Copy cronfiles
   mkdir -p ${pkgdir}/etc/{dataleech,cron.d}
 
-  install -Dm644 "${srcdir}/other/datasets" \
-                 "${pkgdir}/etc/dataleech/datasets"
+  install -Dm644 "${srcdir}/dataleech/other/configfiles/datasets" \
+                 "${pkgdir}/dataleech/etc/dataleech/datasets"
 
-  install -Dm644 "${srcdir}/other/cronfiles/dataleech.10min" \
-                 "${pkgdir}/etc/cron.d/dataleech"
+  install -Dm644 "${srcdir}/dataleech/other/cronfiles/dataleech.10min" \
+                 "${pkgdir}/dataleech/etc/cron.d/dataleech"
 
-  install -Dm755 "${srcdir}/other/cronfiles/dataleech.daily" \
-                 "${pkgdir}/etc/cron.daily/dataleech"
+  install -Dm755 "${srcdir}/dataleech/other/cronfiles/dataleech.daily" \
+                 "${pkgdir}/dataleech/etc/cron.daily/dataleech"
 
-  install -Dm755 "${srcdir}/other/cronfiles/dataleech.weekly" \
+  install -Dm755 "${srcdir}/dataleech/other/cronfiles/dataleech.weekly" \
                  "${pkgdir}/etc/cron.weekly/dataleech"
 
   # Copy the pacman wrapper superman
-  install -Dm755 "${srcdir}/other/scripts/superman" \
-                    "${pkgdir}/usr/bin/superman"
+  install -Dm755 "${srcdir}/dataleech/other/scripts/superman" \
+                 "${pkgdir}/usr/bin/superman"
 }
 
 # vim:set ts=4 sts=2 sw=2 et:
