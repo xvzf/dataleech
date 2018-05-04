@@ -14,6 +14,7 @@ from .cli_helper import (new_snapshot, snapsync_local, snapsync_remote,
                          snapsync_custom)
 
 
+@click.command()
 @click.option("-l", "--local", count=True,
               help="Snyc snapshots to the local backup target")
 @click.option("-r", "--remote", count=True,
@@ -24,7 +25,6 @@ from .cli_helper import (new_snapshot, snapsync_local, snapsync_remote,
               help="Custom source")
 @click.option("--custom-dst",
               help="Custom destination")
-@click.command()
 def sync(local, remote, custom, custom_src, custom_dst):
     """
     Syncs snapshots to a local or remote backup target
