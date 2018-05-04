@@ -1,3 +1,4 @@
+# Maintainer: Matthias Riegler <matthias@xvzf.tech>
 pkgname=dataleech
 pkgdesc="Dataleech - a backup plan using ZFS..."
 pkgver=1.0.0
