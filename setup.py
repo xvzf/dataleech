@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 from codecs import open
 from os import path
 
@@ -26,7 +26,7 @@ setup(
     ],
 
     keywords="backup zfs",
-    packages=find_packages(exclude=["contrib", "docs", "tests", "other"]),
+    packages=["dataleech"],
     install_requires=["Click"],
     entry_points={
         "console_scripts": [
