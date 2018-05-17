@@ -3,7 +3,7 @@
 privilegedcmds="-S -Sw -U -Su -Syu -R -Rs -Rd -Rsc -Rdd -Rn"
 
 function getrootdataset {
-    echo $(zfs list -o name,mountpoint | grep "/$" | awk '{print $1;}')
+    echo $(zfs list -o name,mountpoint | grep "/$" | awk '{print $1; exit}')
     return 0
 }
 
