@@ -10,7 +10,7 @@ with open(path.join(here, "README.rst"), encoding="utf-8") as f:
 
 setup(
     name="dataleech",
-    version="1.0.2",
+    version="1.0.3",
     description="ZFS Backup Strategy - short term local backups and long term\
                  remote sync. ",
     long_description=long_description,
@@ -26,7 +26,7 @@ setup(
     ],
 
     keywords="backup zfs",
-    packages=["dataleech"],
+    packages=["dataleech", "dataleech/zfs"],
     install_requires=["Click"],
     entry_points={
         "console_scripts": [
