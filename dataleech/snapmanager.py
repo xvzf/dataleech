@@ -98,7 +98,6 @@ class SnapManager(object):
         :returns: Success
         """
         snapname = "dataleech-short-{}".format(self._timestamp_short)
-        print(snapname)
 
         status = self.snapshot(snapname)
 
@@ -121,7 +120,6 @@ class SnapManager(object):
         :returns: Success
         """
         snapname = "dataleech-daily-{}".format(self._timestamp)
-        print(snapname)
         return self.snapshot(snapname)
 
     def newweeklysnap(self):
@@ -131,7 +129,6 @@ class SnapManager(object):
         :returns: Success
         """
         snapname = "dataleech-weekly-{}".format(self._timestamp)
-        print(snapname)
         return self.snapshot(snapname)
 
     def newcustomsnap(self, name):
@@ -141,6 +138,5 @@ class SnapManager(object):
         :name: Name of the snapshot ("dataleech-weekly-" + name)
         :returns: Success
         """
-        snapname = "dataleech-weekly-{}".format(self._timestamp_short)
-        print(snapname)
+        snapname = "dataleech-custom-{}".format(self._timestamp_short)
         return self.snapshot(snapname)
