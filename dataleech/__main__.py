@@ -30,7 +30,7 @@ def sync(local, remote, custom, custom_src, custom_dst):
     Syncs snapshots to a local or remote backup target
     """
     # Check if there is anything to sync
-    if not local and not remote:
+    if not local and not remote and not custom:
         sys.exit(1)
 
     # Sync local
